@@ -1,0 +1,77 @@
+#include<stdio.h>
+#include<limits.h>
+
+#define MAX_KEYS 100
+
+// Function to calculate the sum of probabilities between i and j
+double sum_of_probabilities(double probabilities[], int i, int j) {
+    double sum = 0;
+    int k;
+    for (k = i; k <= j; k++) {
+        sum += probabilities[k];
+    }
+    return sum;
+}
+
+// Function to find the optimal binary search tree using dynamic programming
+double optimal_bst(double probabilities[], int n) {
+    double cost[n+1][n+1];
+    int i, j, k, l;
+
+    // Initialize the cost table
+    for (i = 0; i <= n; i++) {
+        for (j = 0; j <= n; j++) {
+            cost[i][j] = 0;
+        }
+    }
+
+    // Calculate the cost of a tree with a single node
+    for (i = 0; i < n; i++) {
+        cost[i][i] = probabilities[i];
+    }
+
+    // Calculate the cost of a tree with two nodes
+    for (i = 0; i < n-1; i++) {
+        j = i+1;
+        cost[i][j] = probabilities[i] + probabilities[j] + cost[i][i] + cost[j][j];
+    }
+
+    // Calculate the cost of trees with three or more nodes
+    for (l = 3; l <= n+1; l++) {
+        for (i = 0; i <= n-l+1; i++) {
+            j = i+l-1;
+            cost[i][j] = INT_MAX;
+            for (k = i; k <= j; k++) {
+                double temp = cost[i][k-1] + cost[k+1][j] + sum_of_probabilities(probabilities, i, j);
+                if (temp < cost[i][j]) {
+                    cost[i][j] = temp;
+                }
+            }
+        }
+    }
+
+    // Return the cost of the optimal binary search tree
+    return cost[0][n-1];
+}
+
+int main() {
+    int n, i;
+    double probabilities[MAX_KEYS];
+
+    // Get user input for the number of keys and their probabilities
+    printf("Enter the number of keys: ");
+    scanf("%d", &n);
+
+    printf("Enter the probabilities of the keys:\n");
+    for (i = 0; i < n; i++) {
+        scanf("%lf", &probabilities[i]);
+    }
+
+    // Find the optimal binary search tree
+    double cost = optimal_bst(probabilities, n);
+
+    // Print the result
+    printf("The cost of the optimal binary search tree is: %lf\n", cost);
+
+    return 0;
+}
