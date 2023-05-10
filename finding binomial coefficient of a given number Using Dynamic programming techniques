@@ -1,0 +1,39 @@
+#include <stdio.h>
+
+int binomial_coefficient(int n, int k) {
+    int table[n+1][k+1];
+    int i, j;
+
+    // Base cases
+    for (i = 0; i <= n; i++) {
+        table[i][0] = 1;
+    }
+    for (j = 0; j <= k; j++) {
+        table[j][j] = 1;
+    }
+
+    // Fill up the table row by row
+    for (i = 1; i <= n; i++) {
+        for (j = 1; j <= k; j++) {
+            if (j > i) {
+                // k cannot be greater than n
+                table[i][j] = 0;
+            } else {
+                table[i][j] = table[i-1][j-1] + table[i-1][j];
+            }
+        }
+    }
+
+    return table[n][k];
+}
+
+int main() {
+    int n, k;
+    printf("Enter n and k: ");
+    scanf("%d %d", &n, &k);
+
+    int coefficient = binomial_coefficient(n, k);
+    printf("Binomial coefficient of %d and %d is %d\n", n, k, coefficient);
+
+    return 0;
+}
