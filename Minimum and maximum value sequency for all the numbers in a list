@@ -1,0 +1,30 @@
+#include <stdio.h>
+
+#define MAX_SIZE 100
+
+int main() {
+    int arr[MAX_SIZE], i, j, n;
+
+    printf("Enter the number of elements in the list (up to %d): ", MAX_SIZE);
+    scanf("%d", &n);
+
+    printf("Enter %d integers: ", n);
+    for (i = 0; i < n; i++) {
+        scanf("%d", &arr[i]);
+    }
+
+    printf("Minimum and maximum value sequence for each number:\n");
+    for (i = 0; i < n; i++) {
+        int min = arr[i], max = arr[i];
+        for (j = i+1; j < n; j++) {
+            if (arr[j] < min) {
+                min = arr[j];
+            } else if (arr[j] > max) {
+                max = arr[j];
+            }
+        }
+        printf("%d: %d %d\n", arr[i], min, max);
+    }
+
+    return 0;
+}
