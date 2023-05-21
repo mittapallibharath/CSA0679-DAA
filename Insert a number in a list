@@ -1,0 +1,92 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+typedef struct Node {
+    int data;
+    struct Node* next;
+} Node;
+
+// Function to create a new node
+Node* createNode(int data)
+{
+    Node* newNode = (Node*)malloc(sizeof(Node));
+    if (newNode == NULL) {
+        printf("Memory allocation failed.\n");
+        exit(1);
+    }
+    newNode->data = data;
+    newNode->next = NULL;
+    return newNode;
+}
+
+// Function to insert a number into the list at the specified position
+Node* insert(Node* head, int data, int position)
+{
+    Node* newNode = createNode(data);
+
+    // If the list is empty, make the new node the head
+    if (head == NULL) {
+        head = newNode;
+        return head;
+    }
+
+    // If the position is 0, insert at the beginning
+    if (position == 0) {
+        newNode->next = head;
+        head = newNode;
+        return head;
+    }
+
+    Node* current = head;
+    Node* prev = NULL;
+    int count = 0;
+
+    // Traverse to the specified position
+    while (current != NULL && count < position) {
+        prev = current;
+        current = current->next;
+        count++;
+    }
+
+    // Insert the new node at the specified position
+    prev->next = newNode;
+    newNode->next = current;
+
+    return head;
+}
+
+// Function to display the list
+void displayList(Node* head)
+{
+    if (head == NULL) {
+        printf("List is empty.\n");
+        return;
+    }
+
+    Node* current = head;
+
+    while (current != NULL) {
+        printf("%d ", current->data);
+        current = current->next;
+    }
+    printf("\n");
+}
+
+int main()
+{
+    Node* head = NULL;
+    int data, position;
+
+    printf("Enter a number to insert: ");
+    scanf("%d", &data);
+
+    printf("Enter the position to insert at: ");
+    scanf("%d", &position);
+
+    head = insert(head, data, position);
+
+    printf("Updated list: ");
+    displayList(head);
+
+    return 0;
+}
