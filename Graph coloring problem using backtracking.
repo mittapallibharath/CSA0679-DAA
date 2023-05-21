@@ -1,0 +1,70 @@
+#include <stdio.h>
+
+#define MAX_VERTICES 20
+
+int graph[MAX_VERTICES][MAX_VERTICES];
+int numVertices, numColors;
+int solution[MAX_VERTICES];
+
+// Function to check if it is safe to color a vertex with a given color
+int isSafe(int vertex, int color)
+{
+    for (int i = 0; i < numVertices; i++) {
+        if (graph[vertex][i] && solution[i] == color) {
+            return 0;
+        }
+    }
+    return 1;
+}
+
+// Recursive function to solve the Graph Coloring problem
+int graphColoring(int vertex)
+{
+    if (vertex == numVertices) {
+        return 1; // All vertices have been assigned a color
+    }
+
+    for (int color = 1; color <= numColors; color++) {
+        if (isSafe(vertex, color)) {
+            solution[vertex] = color;
+
+            // Recur to assign colors to the rest of the vertices
+            if (graphColoring(vertex + 1)) {
+                return 1;
+            }
+
+            // If assigning color to vertex doesn't lead to a solution,
+            // then backtrack and try a different color
+            solution[vertex] = 0;
+        }
+    }
+
+    return 0; // No solution found
+}
+
+int main()
+{
+    printf("Enter the number of vertices in the graph: ");
+    scanf("%d", &numVertices);
+
+    printf("Enter the adjacency matrix of the graph:\n");
+    for (int i = 0; i < numVertices; i++) {
+        for (int j = 0; j < numVertices; j++) {
+            scanf("%d", &graph[i][j]);
+        }
+    }
+
+    printf("Enter the number of colors available: ");
+    scanf("%d", &numColors);
+
+    if (graphColoring(0)) {
+        printf("Solution:\n");
+        for (int i = 0; i < numVertices; i++) {
+            printf("Vertex %d: Color %d\n", i, solution[i]);
+        }
+    } else {
+        printf("No solution found.\n");
+    }
+
+    return 0;
+}
